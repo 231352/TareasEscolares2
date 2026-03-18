@@ -1,83 +1,181 @@
-# 📚 Tareas Escolares v2.0
+# Taskora
 
----
+Taskora es una agenda academica web para administrar periodos, materias, tareas y horarios desde un solo panel. El proyecto incluye backend con Express y PostgreSQL, autenticacion con JWT y una interfaz en `public/` con temas de color, resumen general, calendario y horario semanal.
 
-## ⚙️ Requisitos del Entorno (Backend)
+## Funcionalidades
 
-Para que cualquier desarrollador pueda replicar y ejecutar este proyecto en su propio equipo local, es necesario contar con las siguientes herramientas, librerías y tecnologías:
+- Registro e inicio de sesion con token JWT.
+- CRUD de periodos escolares.
+- CRUD de materias asociadas a un periodo.
+- CRUD de tareas asociadas a una materia.
+- Marcado de tareas como entregadas.
+- Listados de tareas pendientes, vencidas y completadas.
+- Calendario mensual con tareas por fecha y tarjeta de detalle.
+- Horario semanal por materia con bloques de color.
+- Panel de resumen con metricas, mini calendario y agenda del dia.
+- Selector de temas visuales: `light`, `indigo`, `emerald`, `sunset` y `rose`.
+- Interfaz responsive con estilos que cambian segun el tema activo.
 
-| Herramienta / Tecnología | Versión | Descripción / Uso en el proyecto |
-| :--- | :---: | :--- |
-| **Node.js** | `v24.13.0` | Entorno de ejecución para levantar el servidor. |
-| **PostgreSQL** | `18.1` | Sistema de gestión de base de datos relacional principal. |
-| **Git Bash** | `11.6.2` | Terminal de comandos para la gestión del control de versiones. |
-| **Nodemon** | *Última* | Dependencia de desarrollo para reiniciar el servidor automáticamente. |
-| **Postman** | *Última* | Cliente para realizar pruebas y consumo de la API. |
-| **Nano** | *Última* | Editor de texto ligero para la terminal. |
-| **GitHub** | *Última* | Alojamiento del repositorio y trabajo colaborativo. |
+## Tecnologias
 
-> **Nota importante:** Asegúrate de instalar las dependencias ejecutando `npm install` en tu terminal antes de intentar levantar el servidor.
+- Node.js
+- Express
+- PostgreSQL
+- JSON Web Token (`jsonwebtoken`)
+- bcrypt
+- dotenv
+- nodemon
+- HTML, CSS y JavaScript vanilla
 
----
+## Estructura General
 
-## 🚀 Endpoints de la API
+```text
+backend/
+|-- public/
+|   |-- app.js
+|   |-- index.html
+|   `-- styles.css
+|-- src/
+|   |-- app.js
+|   |-- config/
+|   |   `-- db.js
+|   |-- controllers/
+|   |-- middlewares/
+|   `-- routes/
+|-- package.json
+`-- README.md
+```
 
-A continuación, se describen las rutas disponibles en el backend para interactuar con el sistema:
+## Requisitos
 
-### 🔐 Autenticación
+- Node.js instalado
+- PostgreSQL disponible
+- Variables de entorno configuradas en `.env`
 
-| Endpoint | Método | Descripción |
-| :--- | :---: | :--- |
-| `/api/auth/register` | **POST** | Registrar un nuevo usuario. |
-| `/api/auth/login` | **POST** | Iniciar sesión y obtener token JWT. |
+## Instalacion
 
-### 📅 Periodos
+```bash
+npm install
+```
 
-| Endpoint | Método | Descripción |
-| :--- | :---: | :--- |
-| `/api/periodos` | **POST** | Crear un nuevo periodo académico. |
-| `/api/periodos` | **GET** | Listar todos los periodos del usuario autenticado. |
-| `/api/periodos/:id` | **GET** | Obtener los detalles de un periodo específico. |
-| `/api/periodos/:id` | **PUT** | Actualizar un periodo existente. |
-| `/api/periodos/:id` | **DELETE** | Eliminar un periodo. |
+## Variables de Entorno
 
-### 📖 Materias
+Crea un archivo `.env` con la configuracion de tu base de datos y tu clave JWT. Ajusta los nombres segun lo que usa tu proyecto en `src/config/db.js` y en el middleware de autenticacion.
 
-| Endpoint | Método | Descripción |
-| :--- | :---: | :--- |
-| `/api/materias` | **POST** | Crear una nueva materia. |
-| `/api/materias` | **GET** | Listar todas las materias del usuario autenticado. |
-| `/api/materias/:id_periodo`| **GET** | Listar materias asociadas a un periodo específico. |
-| `/api/materias/detalle/:id`| **GET** | Obtener el detalle completo de una materia. |
-| `/api/materias/:id` | **PUT** | Actualizar una materia. |
-| `/api/materias/:id` | **DELETE** | Eliminar una materia. |
+Ejemplo:
 
-### 🕒 Horarios
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=tu_password
+DB_NAME=tu_base_de_datos
+JWT_SECRET=tu_clave_secreta
+```
 
-| Endpoint | Método | Descripción |
-| :--- | :---: | :--- |
-| `/api/horarios` | **POST** | Crear un nuevo horario para una materia. |
-| `/api/horarios/materia/:id_materia`| **GET** | Obtener todos los horarios de una materia específica. |
-| `/api/horarios` | **GET** | Obtener el horario completo del usuario. |
-| `/api/horarios/:id` | **PUT** | Actualizar un horario existente. |
-| `/api/horarios/:id` | **DELETE** | Eliminar un horario. |
+## Ejecucion
 
-### ✅ Tareas
+Modo desarrollo:
 
-| Endpoint | Método | Descripción |
-| :--- | :---: | :--- |
-| `/api/tareas` | **POST** | Crear una nueva tarea. |
-| `/api/tareas` | **GET** | Listar todas las tareas del usuario. |
-| `/api/tareas/:id` | **GET** | Obtener el detalle de una tarea específica. |
-| `/api/tareas/:id` | **PUT** | Actualizar una tarea. |
-| `/api/tareas/:id` | **DELETE** | Eliminar una tarea. |
-| `/api/tareas/:id/completar` | **PATCH** | Marcar una tarea como completada. |
-| `/api/tareas/estado/pendientes` | **GET** | Listar tareas pendientes *(no completadas y no vencidas)*. |
-| `/api/tareas/estado/vencidas` | **GET** | Listar tareas vencidas *(fecha límite pasada y no completadas)*. |
-| `/api/tareas/estado/completadas` | **GET** | Listar tareas ya completadas. |
+```bash
+npm run dev
+```
 
----
+Luego abre en el navegador:
 
-<br>
+```text
+http://localhost:3000
+```
 
-**Universidad Politécnica de Bacalar** | **Desarrollador:** Fabián Hernández Ceja | **Fecha:** 12 de marzo de 2026
+## Interfaz Actual
+
+La interfaz fue actualizada con estos cambios:
+
+- Nuevo nombre visual de la app: `Taskora`.
+- Encabezado principal mas horizontal para ocupar menos espacio.
+- Encabezado superior adaptado al tema activo.
+- Tarjetas del panel y detalle de tareas sincronizadas con el color elegido.
+- Navegacion lateral por secciones dentro del dashboard.
+- Vista de resumen con:
+  - total de tareas
+  - pendientes
+  - completadas
+  - vencidas
+  - mini calendario
+  - agenda del dia
+- Vista de calendario mensual con seleccion de tarea.
+- Vista de horario semanal por bloques.
+
+## Endpoints
+
+### Autenticacion
+
+| Endpoint | Metodo | Descripcion |
+| --- | --- | --- |
+| `/api/auth/register` | `POST` | Registrar un nuevo usuario. |
+| `/api/auth/login` | `POST` | Iniciar sesion y obtener token JWT. |
+
+### Periodos
+
+| Endpoint | Metodo | Descripcion |
+| --- | --- | --- |
+| `/api/periodos` | `POST` | Crear un periodo academico. |
+| `/api/periodos` | `GET` | Listar periodos del usuario autenticado. |
+| `/api/periodos/:id` | `GET` | Obtener un periodo especifico. |
+| `/api/periodos/:id` | `PUT` | Actualizar un periodo. |
+| `/api/periodos/:id` | `DELETE` | Eliminar un periodo. |
+
+### Materias
+
+| Endpoint | Metodo | Descripcion |
+| --- | --- | --- |
+| `/api/materias` | `POST` | Crear una materia. |
+| `/api/materias` | `GET` | Listar materias del usuario autenticado. |
+| `/api/materias/:id_periodo` | `GET` | Listar materias por periodo. |
+| `/api/materias/detalle/:id` | `GET` | Obtener detalle de una materia. |
+| `/api/materias/:id` | `PUT` | Actualizar una materia. |
+| `/api/materias/:id` | `DELETE` | Eliminar una materia. |
+
+### Tareas
+
+| Endpoint | Metodo | Descripcion |
+| --- | --- | --- |
+| `/api/tareas` | `POST` | Crear una tarea. |
+| `/api/tareas` | `GET` | Listar tareas del usuario autenticado. |
+| `/api/tareas/:id` | `GET` | Obtener una tarea especifica. |
+| `/api/tareas/:id` | `PUT` | Actualizar una tarea. |
+| `/api/tareas/:id` | `DELETE` | Eliminar una tarea. |
+| `/api/tareas/:id/completar` | `PATCH` | Marcar una tarea como completada. |
+| `/api/tareas/estado/pendientes` | `GET` | Obtener tareas pendientes. |
+| `/api/tareas/estado/vencidas` | `GET` | Obtener tareas vencidas. |
+| `/api/tareas/estado/completadas` | `GET` | Obtener tareas completadas. |
+
+### Horarios
+
+| Endpoint | Metodo | Descripcion |
+| --- | --- | --- |
+| `/api/horarios` | `POST` | Crear un horario. |
+| `/api/horarios` | `GET` | Listar horarios del usuario autenticado. |
+| `/api/horarios/materia/:id_materia` | `GET` | Obtener horarios de una materia. |
+| `/api/horarios/:id` | `PUT` | Actualizar un horario. |
+| `/api/horarios/:id` | `DELETE` | Eliminar un horario. |
+
+## Scripts Disponibles
+
+| Script | Descripcion |
+| --- | --- |
+| `npm run dev` | Inicia el servidor con nodemon. |
+| `npm test` | Script placeholder actual. |
+
+## Notas
+
+- La carpeta `public/` contiene la interfaz completa consumiendo la API del mismo servidor.
+- El tema seleccionado se guarda en `localStorage`.
+- El filtro de periodo afecta resumen, materias, tareas y horarios.
+- No agregue pruebas automatizadas; el script `npm test` sigue siendo un placeholder.
+
+## Autor
+
+Universidad Politecnica de Bacalar  
+Desarrollador: Fabian Hernandez Ceja
