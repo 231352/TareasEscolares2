@@ -59,16 +59,33 @@ textarea {
 }
 
 .hero {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: end;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto;
+  gap: 18px;
+  align-items: center;
   margin-bottom: 14px;
-  padding: 14px 18px;
-  border: 1px solid var(--line);
+  padding: 18px 22px;
+  border: 1px solid var(--dashboard-line);
   border-radius: 22px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 255, 0.88));
+  background:
+    radial-gradient(circle at left center, color-mix(in srgb, var(--accent-3) 30%, transparent), transparent 22%),
+    radial-gradient(circle at right top, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 18%),
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--dashboard-surface) 78%, white) 0%,
+      color-mix(in srgb, var(--dashboard-surface-2) 84%, var(--accent-3) 16%) 42%,
+      color-mix(in srgb, var(--dashboard-surface) 72%, var(--accent-2) 28%) 100%
+    );
   box-shadow: var(--shadow);
+  color: var(--dashboard-text);
+}
+
+.hero > div:first-child {
+  max-width: 900px;
+}
+
+.hero .eyebrow {
+  color: var(--dashboard-muted);
 }
 
 .eyebrow,
@@ -91,13 +108,14 @@ h4 {
 
 h1 {
   font-size: clamp(1.25rem, 2.8vw, 2rem);
-  line-height: 1.02;
-  max-width: 12ch;
+  line-height: 1.08;
+  max-width: 18ch;
+  color: var(--dashboard-text);
 }
 
 .hero-copy {
-  max-width: 46ch;
-  color: var(--muted);
+  max-width: 64ch;
+  color: var(--dashboard-muted);
   margin: 6px 0 0;
   font-size: 0.82rem;
   line-height: 1.35;
@@ -107,12 +125,14 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--dashboard-line);
   border-radius: 999px;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.86);
+  background: color-mix(in srgb, var(--dashboard-surface) 88%, var(--accent-2) 12%);
   white-space: nowrap;
   font-size: 0.9rem;
+  justify-self: end;
+  color: var(--dashboard-text);
 }
 
 .status-dot {
@@ -848,6 +868,14 @@ button:hover {
 .detail-card {
   margin-top: 16px;
   padding: 18px;
+  border-color: var(--dashboard-line);
+  background: linear-gradient(180deg, var(--dashboard-surface) 0%, var(--dashboard-surface-2) 100%);
+  color: var(--dashboard-text);
+}
+
+.detail-card p,
+.detail-card strong {
+  color: var(--dashboard-text);
 }
 
 .schedule-grid {
@@ -906,7 +934,7 @@ button:hover {
 
 @media (max-width: 900px) {
   .hero {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: start;
   }
 
@@ -933,6 +961,10 @@ button:hover {
 
   .schedule-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-status {
+    justify-self: start;
   }
 }
 
