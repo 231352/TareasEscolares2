@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agenda Escolar</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Planeador academico</p>
+          <h1>Agenda de tareas, materias y horarios en un solo lugar.</h1>
+          <p class="hero-copy">
+            Registra tus periodos, organiza materias, administra tareas y
+            consulta tu horario semanal con colores por materia.
+          </p>
+        </div>
+        <div class="hero-status" id="heroStatus">
+          <span class="status-dot"></span>
+          <span>Conecta tu cuenta para comenzar</span>
+        </div>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel auth-panel" id="authPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Acceso</p>
+              <h2>Registro y login</h2>
+            </div>
+            <div class="tab-row">
+              <button class="tab-button active" data-auth-tab="login">Login</button>
+              <button class="tab-button" data-auth-tab="register">Registro</button>
+            </div>
+          </div>
+
+          <form id="loginForm" class="stack">
+            <label>
+              <span>Correo</span>
+              <input type="email" name="correo" placeholder="alumno@correo.com" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Tu password" required />
+            </label>
+            <button type="submit" class="primary-button">Entrar</button>
+          </form>
+
+          <form id="registerForm" class="stack hidden">
+            <label>
+              <span>Nombre</span>
+              <input type="text" name="nombre" placeholder="Nombre completo" required />
+            </label>
+            <label>
+              <span>Correo</span>
+              <input type="email" name="correo" placeholder="alumno@correo.com" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Crea un password" required />
+            </label>
+            <button type="submit" class="primary-button">Crear cuenta</button>
+          </form>
+
+          <div id="authMessage" class="message-box"></div>
+        </section>
+
+        <section class="panel hidden" id="dashboardPanel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Panel</p>
+              <h2 id="welcomeTitle">Bienvenido</h2>
+            </div>
+            <div class="toolbar">
+              <label class="compact-field">
+                <span>Periodo activo</span>
+                <select id="periodFilter"></select>
+              </label>
+              <button id="logoutButton" class="secondary-button">Cerrar sesion</button>
+            </div>
+          </div>
+
+          <div id="dashboardMessage" class="message-box"></div>
+          <section class="dashboard-layout">
+            <aside class="dashboard-sidebar">
+              <div class="sidebar-intro">
+                <p class="section-kicker">Organizacion</p>
+                <h3>Menu del panel</h3>
+                <p class="muted">
+                  Cambia entre secciones para administrar tu agenda sin ver todo al mismo tiempo.
+                </p>
+              </div>
+              <nav class="dashboard-nav">
+                <button class="dashboard-tab active" data-dashboard-tab="resumen">Resumen</button>
+                <button class="dashboard-tab" data-dashboard-tab="periodos">Periodos</button>
+                <button class="dashboard-tab" data-dashboard-tab="materias">Materias</button>
+                <button class="dashboard-tab" data-dashboard-tab="tareas">Tareas</button>
+                <button class="dashboard-tab" data-dashboard-tab="calendario">Calendario</button>
+                <button class="dashboard-tab" data-dashboard-tab="horario">Horario</button>
+              </nav>
+              <section class="theme-panel">
+                <div>
+                  <p class="section-kicker">Personalizacion</p>
+                  <h4>Color del panel</h4>
+                </div>
+                <div class="theme-options">
+                  <button type="button" class="theme-swatch active" data-theme="light" aria-label="Tema claro"></button>
+                  <button type="button" class="theme-swatch" data-theme="indigo" aria-label="Tema indigo"></button>
+                  <button type="button" class="theme-swatch" data-theme="emerald" aria-label="Tema verde"></button>
+                  <button type="button" class="theme-swatch" data-theme="sunset" aria-label="Tema coral"></button>
+                  <button type="button" class="theme-swatch" data-theme="rose" aria-label="Tema rosa"></button>
+                </div>
+              </section>
+            </aside>
+
+            <section class="dashboard-content">
+              <article class="dashboard-section active" data-dashboard-panel="resumen">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Panel principal</p>
+                    <h3>Resumen del periodo</h3>
+                  </div>
+                </div>
+                <section class="summary-hero">
+                  <div class="summary-hero-copy">
+                    <span class="summary-badge">Centro academico</span>
+                    <h4>Organiza tu carga academica con claridad.</h4>
+                    <p>
+                      Revisa rapidamente tus pendientes, tus tareas completadas y lo que toca hoy sin cambiar
+                      de seccion.
+                    </p>
+                  </div>
+                  <div class="summary-highlight">
+                    <span class="summary-highlight-label">Periodo mostrado</span>
+                    <strong id="summaryPeriodLabel">Todos los periodos</strong>
+                  </div>
+                </section>
+                <section class="stats-grid summary-stats" id="statsGrid"></section>
+                <section class="summary-board">
+                  <article class="summary-panel summary-calendar-panel">
+                    <div class="summary-panel-head">
+                      <div>
+                        <p class="section-kicker">Calendario rapido</p>
+                        <h4 id="summaryCalendarTitle">Mes actual</h4>
+                      </div>
+                    </div>
+                    <div class="summary-mini-weekdays" id="summaryMiniWeekdays"></div>
+                    <div class="summary-mini-calendar" id="summaryMiniCalendar"></div>
+                  </article>
+
+                  <article class="summary-panel summary-agenda-panel">
+                    <div class="summary-panel-head">
+                      <div>
+                        <p class="section-kicker">Agenda del dia</p>
+                        <h4 id="summaryAgendaDate">Hoy</h4>
+                      </div>
+                    </div>
+                    <div class="summary-agenda-list" id="summaryAgendaList"></div>
+                  </article>
+                </section>
+              </article>
+
+              <article class="dashboard-section" data-dashboard-panel="periodos">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Gestion</p>
+                    <h3>Periodos escolares</h3>
+                  </div>
+                  <span class="module-note">CRUD completo</span>
+                </div>
+                <section class="module">
+                  <form id="periodoForm" class="grid-form three-cols">
+                    <input type="hidden" name="id" />
+                    <label>
+                      <span>Nombre</span>
+                      <input type="text" name="nombre" placeholder="2026-A" required />
+                    </label>
+                    <label>
+                      <span>Inicio</span>
+                      <input type="date" name="fecha_inicio" required />
+                    </label>
+                    <label>
+                      <span>Fin</span>
+                      <input type="date" name="fecha_fin" required />
+                    </label>
+                    <div class="form-actions">
+                      <button type="submit" class="primary-button">Guardar periodo</button>
+                      <button type="button" class="ghost-button hidden" id="cancelPeriodoEdit">Cancelar</button>
+                    </div>
+                  </form>
+                </section>
+                <section class="module">
+                  <div id="periodosList" class="card-list"></div>
+                </section>
+              </article>
+
+              <article class="dashboard-section" data-dashboard-panel="materias">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Gestion</p>
+                    <h3>Materias</h3>
+                  </div>
+                  <span class="module-note">Filtradas por periodo</span>
+                </div>
+                <section class="module">
+                  <form id="materiaForm" class="grid-form three-cols">
+                    <input type="hidden" name="id" />
+                    <label>
+                      <span>Nombre</span>
+                      <input type="text" name="nombre" placeholder="Matematicas" required />
+                    </label>
+                    <label>
+                      <span>Profesor</span>
+                      <input type="text" name="profesor" placeholder="Mtra. Lopez" />
+                    </label>
+                    <label>
+                      <span>Periodo</span>
+                      <select name="id_periodo" required></select>
+                    </label>
+                    <div class="form-actions">
+                      <button type="submit" class="primary-button">Guardar materia</button>
+                      <button type="button" class="ghost-button hidden" id="cancelMateriaEdit">Cancelar</button>
+                    </div>
+                  </form>
+                </section>
+                <section class="module">
+                  <div id="materiasList" class="card-list"></div>
+                </section>
+              </article>
+
+              <article class="dashboard-section" data-dashboard-panel="tareas">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Gestion</p>
+                    <h3>Tareas</h3>
+                  </div>
+                  <span class="module-note">Incluye marcar como entregada</span>
+                </div>
+                <section class="module">
+                  <form id="tareaForm" class="grid-form four-cols">
+                    <input type="hidden" name="id" />
+                    <label>
+                      <span>Titulo</span>
+                      <input type="text" name="titulo" placeholder="Ensayo final" required />
+                    </label>
+                    <label>
+                      <span>Descripcion</span>
+                      <textarea name="descripcion" placeholder="Detalles de la tarea"></textarea>
+                    </label>
+                    <label>
+                      <span>Fecha de entrega</span>
+                      <input type="date" name="fecha_entrega" required />
+                    </label>
+                    <label>
+                      <span>Materia</span>
+                      <select name="id_materia" required></select>
+                    </label>
+                    <div class="form-actions">
+                      <button type="submit" class="primary-button">Guardar tarea</button>
+                      <button type="button" class="ghost-button hidden" id="cancelTareaEdit">Cancelar</button>
+                    </div>
+                  </form>
+                </section>
+                <section class="module">
+                  <div class="task-columns">
+                    <div>
+                      <h4>Pendientes</h4>
+                      <div id="tareasPendientesList" class="card-list compact"></div>
+                    </div>
+                    <div>
+                      <h4>Vencidas</h4>
+                      <div id="tareasVencidasList" class="card-list compact"></div>
+                    </div>
+                    <div>
+                      <h4>Realizadas</h4>
+                      <div id="tareasCompletadasList" class="card-list compact"></div>
+                    </div>
+                  </div>
+                </section>
+              </article>
+
+              <article class="dashboard-section" data-dashboard-panel="calendario">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Vista</p>
+                    <h3>Calendario de tareas</h3>
+                  </div>
+                  <span class="module-note">Pendientes y realizadas por fecha</span>
+                </div>
+                <section class="module">
+                  <div class="calendar-toolbar">
+                    <button id="prevMonth" class="ghost-button">Mes anterior</button>
+                    <h4 id="calendarTitle"></h4>
+                    <button id="nextMonth" class="ghost-button">Mes siguiente</button>
+                  </div>
+                  <div class="calendar-weekdays" id="calendarWeekdays"></div>
+                  <div class="calendar-grid" id="calendarGrid"></div>
+                  <div class="detail-card" id="taskDetail">
+                    <h4>Detalle de la tarea</h4>
+                    <p>Selecciona una tarea del calendario para ver su informacion.</p>
+                  </div>
+                </section>
+              </article>
+
+              <article class="dashboard-section" data-dashboard-panel="horario">
+                <div class="section-header">
+                  <div>
+                    <p class="section-kicker">Vista</p>
+                    <h3>Horario semanal</h3>
+                  </div>
+                  <span class="module-note">Vista escolar por colores</span>
+                </div>
+                <section class="module">
+                  <form id="horarioForm" class="grid-form four-cols">
+                    <input type="hidden" name="id" />
+                    <label>
+                      <span>Dia</span>
+                      <select name="dia_semana" required>
+                        <option value="Lun">Lunes</option>
+                        <option value="Mar">Martes</option>
+                        <option value="Mie">Miercoles</option>
+                        <option value="Jue">Jueves</option>
+                        <option value="Vie">Viernes</option>
+                        <option value="Sab">Sabado</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>Hora inicio</span>
+                      <input type="time" name="hora_inicio" required />
+                    </label>
+                    <label>
+                      <span>Hora fin</span>
+                      <input type="time" name="hora_fin" required />
+                    </label>
+                    <label>
+                      <span>Materia</span>
+                      <select name="id_materia" required></select>
+                    </label>
+                    <div class="form-actions">
+                      <button type="submit" class="primary-button">Guardar horario</button>
+                      <button type="button" class="ghost-button hidden" id="cancelHorarioEdit">Cancelar</button>
+                    </div>
+                  </form>
+                </section>
+                <section class="module">
+                  <div id="horariosList" class="card-list"></div>
+                </section>
+                <section class="module">
+                  <div class="schedule-grid" id="scheduleGrid"></div>
+                </section>
+              </article>
+            </section>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <template id="emptyStateTemplate">
+      <div class="empty-state">
+        <p>No hay registros para mostrar.</p>
+      </div>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
